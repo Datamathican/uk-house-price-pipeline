@@ -1,0 +1,42 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    tables:
+      - name: price_paid
+        description: Land Registry Price Paid Data, loaded by src/ingest.py
+        loaded_at_field: _loaded_at
+        freshness:
+          warn_after: {count: 10, period: day}
+
+models:
+  - name: stg_price_paid
+    description: Typed and filtered Price Paid transactions.
+    columns:
+      - name: transaction_id
+        tests: [unique, not_null]
+      - name: price
+        tests:
+          - not_null
+      - name: sale_date
+        tests: [not_null]
+      - name: property_type
+        tests:
+          - accepted_values:
+              arguments:
+                values: ["Detached", "Semi-detached", "Terraced", "Flat/Maisonette", "Other"]
+
+  - name: monthly_prices_uk
+    description: Median and mean sale price per month across the UK.
+    columns:
+      - name: sale_month
+        tests: [unique, not_null]
+      - name: median_price
+        tests: [not_null]
+
+  - name: monthly_prices_by_county
+    description: Median sale price per month, county and property type.
+    columns:
+      - name: sales
+        tests: [not_null]

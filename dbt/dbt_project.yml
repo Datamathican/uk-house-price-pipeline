@@ -1,0 +1,13 @@
+name: uk_house_prices
+version: "1.0.0"
+config-version: 2
+profile: uk_house_prices
+
+model-paths: ["models"]
+
+models:
+  uk_house_prices:
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table

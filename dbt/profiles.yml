@@ -1,0 +1,8 @@
+uk_house_prices:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      # Relative to where dbt is run from (the repo root in CI and the README steps)
+      path: "{{ env_var('WAREHOUSE_PATH', 'data/warehouse.duckdb') }}"
+      threads: 4
